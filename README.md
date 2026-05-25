@@ -1,8 +1,5 @@
 # TriageTech — AI-Based Emergency Triage and Resource Allocation System
 
-**Course:** COMP360 — Introduction to AI (Section B, Spring 2026), Forman Christian College
-**Team TriageTech:** Sufyan Abbasi (271045575) · Laiba Nouman (27-1046964)
-
 A decision-support prototype for hospital emergency departments. It does two things:
 
 1. **Classifies patient urgency** — a **Decision Tree** reads the patient's vital signs and
