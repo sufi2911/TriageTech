@@ -1,0 +1,23 @@
+# Python
+__pycache__/
+*.py[cod]
+*.egg-info/
+.venv/
+venv/
+env/
+
+# Streamlit
+.streamlit/secrets.toml
+
+# Editor / OS
+.vscode/
+.idea/
+.DS_Store
+Thumbs.db
+
+# Local agent / preview tooling (not needed on GitHub)
+.claude/
+
+# Node build artifacts (report generator)
+report/node_modules/
+report/package*.json

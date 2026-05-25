@@ -1,0 +1,48 @@
+{
+  "feature_columns": [
+    "Age",
+    "SBP",
+    "DBP",
+    "HR",
+    "RR",
+    "BT",
+    "Saturation",
+    "NRS_pain",
+    "Sex",
+    "Arrival mode",
+    "Injury",
+    "Mental",
+    "Pain",
+    "chest_pain",
+    "breathing_difficulty",
+    "abdominal_pain",
+    "head_or_neuro",
+    "fever",
+    "injury_trauma",
+    "bleeding",
+    "shock_index",
+    "pulse_pressure",
+    "mean_arterial_pressure",
+    "abnormal_vitals"
+  ],
+  "classes": [
+    "Critical",
+    "Low",
+    "Medium"
+  ],
+  "medians": {
+    "Age": 57.0,
+    "SBP": 130.0,
+    "DBP": 80.0,
+    "HR": 82.0,
+    "RR": 20.0,
+    "BT": 36.5,
+    "Saturation": 98.0,
+    "NRS_pain": 3.0,
+    "Sex": 2.0,
+    "Arrival mode": 3.0,
+    "Injury": 1.0,
+    "Mental": 1.0,
+    "Pain": 1.0
+  }
+}
