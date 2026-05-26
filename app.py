@@ -1,13 +1,3 @@
-"""
-TriageTech - AI-Based Emergency Triage and Resource Allocation System
-COMP360-B  |  Team: Laiba Nouman & Sufyan Abbasi
-
-A nurse-friendly front end. Plain English everywhere - no heavy medical jargon.
-
-Run it with:
-    streamlit run app.py
-"""
-
 import random
 
 import altair as alt
@@ -18,9 +8,7 @@ from src import allocation as alloc
 from src import config as C
 from src import data_prep, model
 
-# ---------------------------------------------------------------------------
 # Page setup
-# ---------------------------------------------------------------------------
 st.set_page_config(page_title="TriageTech", page_icon="🏥", layout="wide")
 
 
@@ -41,9 +29,7 @@ def get_raw_data():
 
 BUNDLE = get_bundle()
 
-# ---------------------------------------------------------------------------
 # Session state (remembers the waiting list and the resource settings)
-# ---------------------------------------------------------------------------
 if "queue" not in st.session_state:
     st.session_state.queue = []
 if "resources" not in st.session_state:
@@ -52,9 +38,7 @@ if "last_assessment" not in st.session_state:
     st.session_state.last_assessment = None
 
 
-# ---------------------------------------------------------------------------
 # Small helpers
-# ---------------------------------------------------------------------------
 def urgency_badge(u: str, big: bool = False) -> str:
     color = C.URGENCY_COLORS.get(u, "#666")
     size = "1.4rem" if big else "0.95rem"
@@ -113,9 +97,7 @@ def assess(patient: dict) -> dict:
     }
 
 
-# ---------------------------------------------------------------------------
 # Sidebar: navigation + hospital resources
-# ---------------------------------------------------------------------------
 st.sidebar.title("🏥 TriageTech")
 st.sidebar.caption("Emergency triage helper")
 
@@ -137,9 +119,7 @@ st.sidebar.divider()
 st.sidebar.metric("Patients on the waiting list", len(st.session_state.queue))
 
 
-# ===========================================================================
 # PAGE 1 - Check a patient
-# ===========================================================================
 if page == "Check a patient":
     st.title("Check how urgent a patient is")
     st.write("Fill in what you know about the patient. You can leave a box empty "
@@ -234,9 +214,7 @@ if page == "Check a patient":
             st.rerun()
 
 
-# ===========================================================================
 # PAGE 2 - Waiting list & resource allocation
-# ===========================================================================
 elif page == "Waiting list":
     st.title("Waiting list and who gets seen first")
     queue = st.session_state.queue
@@ -308,9 +286,7 @@ elif page == "Waiting list":
                 st.rerun()
 
 
-# ===========================================================================
 # PAGE 3 - Quick demo
-# ===========================================================================
 elif page == "Quick demo":
     st.title("Quick demo")
     st.write("Load real example patients from the dataset to see the system work "
@@ -340,9 +316,7 @@ elif page == "Quick demo":
         st.caption(f"The waiting list now has {len(st.session_state.queue)} patients.")
 
 
-# ===========================================================================
 # PAGE 4 - Model performance
-# ===========================================================================
 elif page == "How accurate is it?":
     st.title("How accurate is the model?")
     metrics = get_metrics()
@@ -395,9 +369,7 @@ elif page == "How accurate is it?":
             st.code(metrics.get("tree_text", "not available"))
 
 
-# ===========================================================================
 # PAGE 5 - About
-# ===========================================================================
 elif page == "About":
     st.title("About TriageTech")
     st.markdown(

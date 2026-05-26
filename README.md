@@ -59,18 +59,19 @@ AI PROJECT/
 ├── requirements.txt        # Python dependencies
 ├── data/
 │   └── data.csv            # KTAS emergency-triage dataset (~1,267 visits)
-├── models/                 # trained model + saved results (auto-generated)
-│   ├── triage_tree.joblib
-│   ├── feature_meta.json
-│   └── metrics.json
-├── src/
-│   ├── config.py           # feature names, label mapping, plain-English labels
-│   ├── data_prep.py        # cleaning, missing values, symptom + engineered features
-│   ├── model.py            # train / evaluate / save the Decision Tree; predict
-│   └── allocation.py       # risk score, red-flag safety net, priority-queue allocator
-└── report/                 # final report (Word + PDF) and the figures/scripts
-    └── TriageTech_FinalReport_COMP360-B.pdf
+├── models/                 # trained model bundle (auto-generated)
+│   └── triage_tree.joblib  # tree + medians + feature meta + metrics (all-in-one)
+└── src/
+    ├── config.py           # feature names, label mapping, plain-English labels
+    ├── data_prep.py        # cleaning, missing values, symptom + engineered features
+    ├── model.py            # train / evaluate / save the Decision Tree; predict
+    └── allocation.py       # risk score, red-flag safety net, priority-queue allocator
 ```
+
+Everything is pure Python — there are no JSON or config sidecar files. The
+classification report and confusion matrix are computed in `src/model.py` and
+saved inside the joblib bundle (the "How accurate is it?" page reads them
+straight from there).
 
 ---
 

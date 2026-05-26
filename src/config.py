@@ -1,39 +1,17 @@
-"""
-Central configuration for the TriageTech system.
-
-Everything that the rest of the code needs to agree on lives here:
-  - which columns are features and what the target is
-  - how the raw KTAS levels (1-5) map to our 3 urgency classes
-  - plain-English labels for the nurse-facing screen (no heavy medical jargon)
-  - normal vital-sign ranges used for the risk score and for friendly warnings
-
-Keeping this in one file means the training code and the live app can never
-disagree about what a feature means.
-"""
-
 from pathlib import Path
 
-# ---------------------------------------------------------------------------
 # Project paths
-# ---------------------------------------------------------------------------
 ROOT_DIR = Path(__file__).resolve().parent.parent
 DATA_DIR = ROOT_DIR / "data"
 MODEL_DIR = ROOT_DIR / "models"
 DATA_FILE = DATA_DIR / "data.csv"
+# Single Python artifact: holds the trained tree, medians, feature meta, and metrics.
 MODEL_FILE = MODEL_DIR / "triage_tree.joblib"
-META_FILE = MODEL_DIR / "feature_meta.json"
-METRICS_FILE = MODEL_DIR / "metrics.json"
 
 # The CSV came from Kaggle (KTAS dataset) and uses Latin text encoding.
 CSV_ENCODING = "latin-1"
 
-# ---------------------------------------------------------------------------
-# Target: how the 5-level expert triage score becomes 3 simple classes
-# ---------------------------------------------------------------------------
-# KTAS_expert is the doctor/expert assigned triage level (1 = most serious).
-#   1, 2  -> Critical   (life threatening / needs care right now)
-#   3     -> Medium     (urgent, should be seen soon)
-#   4, 5  -> Low        (not urgent, can safely wait)
+
 RAW_TARGET_COL = "KTAS_expert"
 
 KTAS_TO_URGENCY = {
@@ -55,9 +33,7 @@ URGENCY_MEANING = {
     "Low": "Not urgent - safe to wait",
 }
 
-# ---------------------------------------------------------------------------
 # Features used by the model
-# ---------------------------------------------------------------------------
 # Numeric vitals / measurements (stored as text in the raw file - we coerce).
 NUMERIC_FEATURES = ["Age", "SBP", "DBP", "HR", "RR", "BT", "Saturation", "NRS_pain"]
 
@@ -95,14 +71,7 @@ SYMPTOM_KEYWORDS = {
 # Features the nurse actually enters (raw vitals, coded answers, symptom flags).
 BASE_FEATURE_COLUMNS = NUMERIC_FEATURES + CATEGORICAL_FEATURES + SYMPTOM_FLAGS
 
-# Extra features we COMPUTE from the ones above. A Decision Tree splits on one
-# value at a time, so it cannot work out a ratio like heart-rate-over-blood-
-# pressure by itself - handing these over gives it sharper, clinically-meaningful
-# split points and lifts accuracy without needing any new input from the nurse.
-#   shock_index            = heart rate / top blood pressure  (high = warning sign)
-#   pulse_pressure         = top minus bottom blood pressure
-#   mean_arterial_pressure = average pressure the organs actually see
-#   abnormal_vitals        = how many vital signs are outside the normal range
+
 ENGINEERED_FEATURES = [
     "shock_index",
     "pulse_pressure",
@@ -113,10 +82,6 @@ ENGINEERED_FEATURES = [
 # The exact column order the model expects (built once, reused everywhere).
 FEATURE_COLUMNS = BASE_FEATURE_COLUMNS + ENGINEERED_FEATURES
 
-# ---------------------------------------------------------------------------
-# Plain-English option labels for the coded categorical fields
-# ---------------------------------------------------------------------------
-# label -> stored numeric code.  The screen shows the label; the model gets the code.
 SEX_OPTIONS = {"Female": 1, "Male": 2}
 
 ARRIVAL_OPTIONS = {
@@ -131,7 +96,6 @@ ARRIVAL_OPTIONS = {
 
 INJURY_OPTIONS = {"No - feeling ill": 1, "Yes - injury or accident": 2}
 
-# AVPU-style alertness, written in everyday words.
 MENTAL_OPTIONS = {
     "Awake and alert": 1,
     "Responds when spoken to": 2,
@@ -152,11 +116,8 @@ SYMPTOM_LABELS = {
     "bleeding": "Bleeding",
 }
 
-# ---------------------------------------------------------------------------
 # Vital-sign reference ranges (adult). Used for the risk score and for the
-# gentle "this number looks unusual" hints on screen. Not a medical standard,
-# just sensible defaults for a teaching prototype.
-# ---------------------------------------------------------------------------
+#  gentle "this number looks unusual" hints on screen.
 VITAL_NORMAL_RANGES = {
     "HR": (60, 100),        # heart rate, beats per minute
     "RR": (12, 20),         # breaths per minute
@@ -180,11 +141,7 @@ VITAL_DISPLAY = {
 
 
 def derive_symptoms(text) -> dict:
-    """Turn a free-text complaint into the 0/1 symptom flags.
 
-    Used in BOTH training (on the raw complaint column) and in the live app
-    (on whatever the nurse types/ticks) so the features always match.
-    """
     flags = {f: 0 for f in SYMPTOM_FLAGS}
     if text is None:
         return flags

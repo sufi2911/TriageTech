@@ -20,9 +20,8 @@ from . import config as C
 
 
 def add_engineered_features(X: pd.DataFrame) -> pd.DataFrame:
-    """Add the computed clinical features to a frame that already has the base
-    columns. Used in training and at predict time so the two always match.
-    """
+    #Add the computed clinical features to a frame that already has the base columns. Used in training and at predict time so the two always match.
+    
     X = X.copy()
     sbp = X["SBP"].replace(0, np.nan)
     X["shock_index"] = (X["HR"] / sbp).clip(lower=0, upper=5).fillna(0.7)
@@ -40,14 +39,14 @@ def add_engineered_features(X: pd.DataFrame) -> pd.DataFrame:
 
 
 def load_raw_dataframe(path=None) -> pd.DataFrame:
-    """Read the raw CSV exactly as it is (no cleaning yet)."""
+    #Read the raw CSV exactly as it is (no cleaning yet).
     path = path or C.DATA_FILE
     # sep=None + python engine auto-detects the delimiter; the file is commas.
     return pd.read_csv(path, encoding=C.CSV_ENCODING, sep=None, engine="python")
 
 
 def _to_number(series: pd.Series) -> pd.Series:
-    """Coerce a text column (possibly with comma decimals) to numbers."""
+    #Coerce a text column (possibly with comma decimals) to numbers.
     cleaned = (
         series.astype(str)
         .str.replace(",", ".", regex=False)
@@ -58,13 +57,7 @@ def _to_number(series: pd.Series) -> pd.Series:
 
 
 def build_feature_frame(raw: pd.DataFrame):
-    """Turn the raw dataframe into (X, y, medians).
-
-    X        : DataFrame with exactly C.FEATURE_COLUMNS, no missing values
-    y        : Series of "Critical" / "Medium" / "Low"
-    medians  : dict of column -> fill value, saved so the live app fills gaps
-               the same way the training data was filled.
-    """
+    
     df = raw.copy()
 
     # 1) numeric vitals: text -> numbers
@@ -111,12 +104,7 @@ def build_feature_frame(raw: pd.DataFrame):
 
 
 def patient_dict_to_features(patient: dict, medians: dict) -> pd.DataFrame:
-    """Build a one-row feature frame for a single live patient.
-
-    `patient` holds raw values keyed by the model column names (numbers may be
-    None if the nurse left them blank). Missing numbers are filled from
-    `medians` so the row always matches the training layout.
-    """
+    #Build a one-row feature frame for a single live patient.
     row = {}
     for col in C.NUMERIC_FEATURES + C.CATEGORICAL_FEATURES:
         val = patient.get(col, None)
